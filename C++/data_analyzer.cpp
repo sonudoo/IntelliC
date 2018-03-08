@@ -132,7 +132,7 @@ public:
 			if(n<=4){
 				for(int i=0;i<m;i++){
 					for(int j=0;j<n;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "\n";
 				}
@@ -140,11 +140,11 @@ public:
 			else{
 				for(int i=0;i<m;i++){
 					for(int j=0;j<2;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "...\t";
 					for(int j=n-2;j<n;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "\n";
 				}
@@ -154,16 +154,17 @@ public:
 			if(n<=4){
 				for(int i=0;i<2;i++){
 					for(int j=0;j<n;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "\n";
 				}
 				for(int j=0;j<n;j++){
 					cout << "..." << "\t";
 				}
+				cout << "\n";
 				for(int i=m-2;i<m;i++){
 					for(int j=0;j<n;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "\n";
 				}
@@ -171,11 +172,11 @@ public:
 			else{
 				for(int i=0;i<2;i++){
 					for(int j=0;j<2;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "...\t";
 					for(int j=n-2;j<n;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "\n";
 				}
@@ -185,11 +186,11 @@ public:
 				cout << "\n";
 				for(int i=m-2;i<m;i++){
 					for(int j=0;j<2;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "...\t";
 					for(int j=n-2;j<n;j++){
-						cout << cwd[j][i] << "\t";
+						cout << fixed << cwd[j][i] << "\t";
 					}
 					cout << "\n";
 				}
@@ -199,7 +200,7 @@ public:
 	void printData(){
 		for(int i=0;i<m;i++){
 			for(int j=0;j<n;j++){
-				cout << cwd[j][i] << " ";
+				cout << fixed << cwd[j][i] << "\t";
 			}
 			cout << "\n";
 		}
@@ -388,6 +389,7 @@ public:
 				for(int j=0;j<n;j++){
 					cout << "..." << "\t";
 				}
+				cout << "\n";
 				for(int i=m-2;i<m;i++){
 					for(int j=0;j<n;j++){
 						cout << cwd[j][i] << "\t";
@@ -426,7 +428,7 @@ public:
 	void printData(){
 		for(int i=0;i<m;i++){
 			for(int j=0;j<n;j++){
-				cout << cwd[j][i] << " ";
+				cout << cwd[j][i] << "\t";
 			}
 			cout << "\n";
 		}

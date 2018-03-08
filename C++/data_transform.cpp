@@ -33,6 +33,20 @@ private:
 		else
 			return res;
 	} 
+	void swap(T &x, T&y){
+		x = x+y;
+		y = x-y;
+		x = x-y;
+	}
+	void reverse(vector <T> &v){
+		int i = 0;
+		int j = v.size()-1;
+		while(i<j){
+			swap(v[i],v[j]);
+			i++;
+			j--;
+		}
+	}
 public:
 	vector <vector<T> > sliceColumn(const vector <vector<T> > &data, int start, int end){
 		vector <vector<T> > sliced_data;
@@ -105,6 +119,16 @@ public:
 		}
 		for(int i=0;i<orig.size();i++){
 			orig[i].push_back(column[i]);
+		}
+	}
+	void prependColumn(vector <vector <T> > &orig, const vector <T> &column){
+		if(orig.size()!=column.size()){
+			throw "Column append Failed. Number of rows must match\n";
+		}
+		for(int i=0;i<orig.size();i++){
+			reverse(orig[i]);
+			orig[i].push_back(column[i]);
+			reverse(orig[i]);
 		}
 	}
 	void appendColumn(vector <vector <T> > &orig, const vector <vector <T> > &columns){

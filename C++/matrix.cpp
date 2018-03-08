@@ -1,5 +1,52 @@
+
+#ifndef _VECTOR_
+	#include <vector>
+	#define _VECTOR_
+#endif
+
+#ifndef _TIME_H_
+	#include <time.h>
+	#define _TIME_H_
+#endif
+
+#ifndef _LIMITS_H_
+	#include <limits.h>
+	#define _LIMITS_H_
+#endif
+
+#ifndef _MATH_H_
+	#include <math.h>
+	#define _MATH_H_
+#endif
+
+
 class Matrix{
 private:
+	double randDouble(bool positiveOnly){
+		if(rand()%2==0 || positiveOnly)
+			return (double)rand()/(double)RAND_MAX;
+		else
+			return -(double)rand()/(double)RAND_MAX;
+	}
+	double power(double x, int n){
+		double res = 1;
+		while(n){
+			if(n&1)
+				res = res*x;
+			x = x*x;
+			n >>= 1;
+		}
+		return res;
+	}
+	double max(double x, double y){
+		if(x>y)	return x;
+		return y;
+	}
+	double min(double x, double y){
+		if(x<y)	return x;
+		return y;
+	}
+public:
 	bool isMatrix(const vector <vector <double> > &data){
 		if(data.size()==0)	return true;
 		int n = data[0].size();
@@ -8,7 +55,6 @@ private:
 		}
 		return true;
 	}
-public:
 	vector <vector <double> > identity(int n){
 		vector <vector<double> > res;
 		for(int i=0;i<n;i++){
@@ -47,12 +93,13 @@ public:
 		}
 		return res;
 	}
-	vector <vector <double> > random(int n, int m){
+	vector <vector <double> > random(int n, int m, bool positiveOnly = false){
 		vector <vector<double> > res;
+		srand(time(0));
 		for(int i=0;i<n;i++){
 			vector <double> row;
 			for(int j=0;j<m;j++){
-				row.push_back(0);
+				row.push_back(randDouble(positiveOnly));
 			}
 			res.push_back(row);
 		}
@@ -60,7 +107,7 @@ public:
 	}
 	vector <vector <double> > transpose(const vector <vector <double> > &data){
 		if(!isMatrix(data)){
-			throw "All the rows must have same number of columns in a Matrix. Check the double dimension vector for dimension consistency\n";
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
 		}
 		if(data.size()==0)	return data;
 		int m = data.size();
@@ -75,9 +122,169 @@ public:
 		}
 		return v;
 	}
+	vector <double> sum(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <double> res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<n;i++){
+			double s = 0;
+			for(int j=0;j<m;j++){
+				s += data[j][i];
+			}
+			res.push_back(s);
+		}
+		return res;
+	}
+	vector <double> avg(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <double> res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<n;i++){
+			double s = 0;
+			for(int j=0;j<m;j++){
+				s += data[j][i];
+			}
+			res.push_back(s/m);
+		}
+		return res;
+	}
+	vector <double> max(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <double> res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<n;i++){
+			double s = -std::numeric_limits<double>::max();
+			for(int j=0;j<m;j++){
+				s = max(s, data[j][i]);
+			}
+			res.push_back(s);
+		}
+		return res;
+	}
+	vector <double> min(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <double> res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<n;i++){
+			double s = std::numeric_limits<double>::max();
+			for(int j=0;j<m;j++){
+				s = min(s, data[j][i]);
+			}
+			res.push_back(s);
+		}
+		return res;
+	}
+	vector <double> std(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <double> res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<n;i++){
+			double s = 0;
+			double ss = 0;
+			for(int j=0;j<m;j++){
+				s += data[j][i];
+				ss += data[j][i]*data[j][i];
+			}
+			res.push_back(sqrt((ss/m) - ((s*s)/(m*m))));
+		}
+		return res;
+	}
+	vector <vector <double> > normalize(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		if(data.size()==0)	return data;
+		vector <double> sd = std(data);
+		vector <double> ag = avg(data);
+		vector <vector <double> > res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<m;i++){
+			vector <double> row;
+			for(int j=0;j<n;j++){
+				if(sd[j]==0){
+					throw "Normalization failed as all the rows in a column is same.\n";
+				}
+				row.push_back((data[i][j]-ag[j])/(sd[j]));
+			}
+			res.push_back(row);
+		}
+		return res;
+	}
+	vector <vector <double> > sum(const vector <vector <double> > &data, double c){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		if(data.size()==0)	return data;
+		int m = data.size();
+		int n = data[0].size();
+		vector <vector <double> > res;
+		for(int i=0;i<m;i++){
+			vector <double> row;
+			for(int j=0;j<n;j++){
+				row.push_back(data[i][j]+c);
+			}
+			res.push_back(row);
+		}
+		return res;
+	}
+	vector <vector <double> > prod(const vector <vector <double> > &data, double c){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		if(data.size()==0)	return data;
+		int m = data.size();
+		int n = data[0].size();
+		vector <vector <double> > res;
+		for(int i=0;i<m;i++){
+			vector <double> row;
+			for(int j=0;j<n;j++){
+				row.push_back(data[i][j]*c);
+			}
+			res.push_back(row);
+		}
+		return res;
+	}
+	vector <vector <double> > pow(const vector <vector <double> > &data, int c){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		if(data.size()==0)	return data;
+		int m = data.size();
+		int n = data[0].size();
+		vector <vector <double> > res;
+		for(int i=0;i<m;i++){
+			vector <double> row;
+			for(int j=0;j<n;j++){
+				row.push_back(power(data[i][j], c));
+			}
+			res.push_back(row);
+		}
+		return res;
+	}
 	vector <vector <double> > sum(const vector <vector <double> > &data1, const vector <vector <double> > &data2){
 		if(!isMatrix(data1) || !isMatrix(data2)){
-			throw "All the rows must have same number of columns in a Matrix. Check the double dimension vector for dimension consistency\n";
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
 		}
 		if(data1.size()!=data2.size()){
 			throw "Matrix dimensions must match for addition\n";
@@ -98,9 +305,9 @@ public:
 		}
 		return res;
 	}
-	vector <vector <double> > difference(const vector <vector <double> > &data1, const vector <vector <double> > &data2){
+	vector <vector <double> > diff(const vector <vector <double> > &data1, const vector <vector <double> > &data2){
 		if(!isMatrix(data1) || !isMatrix(data2)){
-			throw "All the rows must have same number of columns in a Matrix. Check the double dimension vector for dimensional consistency\n";
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
 		}
 		if(data1.size()!=data2.size()){
 			throw "Matrix dimensions must match for subtraction\n";
@@ -121,9 +328,9 @@ public:
 		}
 		return res;
 	}
-	vector <vector <double> > product(const vector <vector <double> > &data1, const vector <vector <double> > &data2){
+	vector <vector <double> > prod(const vector <vector <double> > &data1, const vector <vector <double> > &data2){
 		if(!isMatrix(data1) || !isMatrix(data2)){
-			throw "All the rows must have same number of columns in a Matrix. Check the double dimension vector for dimensional consistency\n";
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
 		}
 		if(data1.size()!=data2.size()){
 			throw "Matrix dimensions must match for subtraction\n";
@@ -146,7 +353,7 @@ public:
 	}
 	vector <vector <double> > multiply(const vector <vector <double> > &data1, const vector <vector <double> > &data2){
 		if(!isMatrix(data1) || !isMatrix(data2)){
-			throw "All the rows must have same number of columns in a Matrix. Check the double dimension vector for dimension consistency\n";
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
 		}
 		if(data1.size()==0)	return data1;
 		if(data2.size()==0)	return data2;
@@ -167,12 +374,94 @@ public:
 		}
 		return res;
 	}
+	vector <double> multiply(const vector <vector <double> > &data1, const vector <double> &data2){
+		if(!isMatrix(data1)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <double> res;
+		if(data1.size()==0)	return res;
+		if(data2.size()==0)	return res;
+		int m1 = data1.size();
+		int n1 = data1[0].size();
+		int m2 = data2.size();
+		if(n1!=m2){
+			throw "Matrix and vector dimensions are incorrect for multiplication\n";
+		}
+		for(int i=0;i<m1;i++){
+			double s = 0;
+			for(int j=0;j<n1;j++){
+				s += data1[i][j]*data2[j];
+			}
+			res.push_back(s);
+		}
+		return res;
+	}
+	vector <vector <double> > upgrade(const vector <double> &data){
+		vector <vector <double> > res;
+		for(int i=0;i<data.size();i++){
+			vector <double> row;
+			row.push_back(data[i]);
+			res.push_back(row);
+		}
+		return res;
+	}
+	double determinant(vector <vector <double> > data){// Here we copy the argument to parameter instead of reference. This is because we need to modify the data to calculate its inverse
+		if(data.size()==0)	return 0;
+		int m = data.size();
+		int n = data[0].size();
+		if(m!=n){
+			throw "Determinants of square matrices can only be calculated.\n";
+		}
+		for(int i=0;i<n;i++){
+			for(int j=0;j<n;j++){
+				printf("%lf ",data[i][j]);
+			}
+			printf("\n");
+		}
+		//Gaussian jordan row-reduction elimination to form an upper-triangular matrix
+
+		double det = 1;
+		for(int j=0;j<n;j++){
+			// Go Columnwise
+			//Exchange jth row with the highest element row in the column. If exchanged det = -det
+			int m = data[j][j];
+			int midx = j;
+			for(int i=j+1;i<n;i++){
+				if(data[i][j]>m){
+					m = data[i][j];
+					midx = i;
+				}
+			}
+			if(midx!=j){
+				for(int i=0;i<n;i++){
+					double temp = data[j][i];
+					data[j][i] = data[midx][i];
+					data[midx][i] = temp;
+				}
+				det = -det;
+			}
+
+			for(int i=j+1;i<n;i++){
+				// There must be a element (j,j) which must be one already
+				double multiplier = data[i][j]/data[j][j];
+				for(int k=0;k<n;k++){
+					data[i][k] = data[i][k] - data[j][k]*multiplier;
+				}	
+			}
+			det *= data[j][j];
+		}
+		return det;
+	}
 	vector <vector <double> > inverse(vector <vector <double> > data){// Here we copy the argument to parameter instead of reference. This is because we need to modify the data to calculate its inverse
 		if(data.size()==0)	return data;
 		int m = data.size();
 		int n = data[0].size();
 		if(m!=n){
 			throw "Only square matrices are invertible\n";
+		}
+		printf("det - %.20lf\n",determinant(data));
+		if(fabs(determinant(data))<0.00000001){
+			throw "The matrix is singular. Inverse doesn't exists\n";
 		}
 		vector <vector <double> > res = identity(n);
 
