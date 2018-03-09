@@ -14,8 +14,9 @@
 	#define _STDIO_H_
 #endif
 
-#include "matrix.cpp"
+
 #include "vector.cpp"
+#include "matrix.cpp"
 #include "data_transform.cpp"
 
 
@@ -30,14 +31,12 @@ private:
 	int n;
 	int m;
 	bool isNormalized;
-	Matrix _m;
-	Vector _v;
 	DataTransform <double> _d;
 	vector <double> hypothesis(){
-		return _m.multiply(X,theta);
+		return Matrix::multiply(X,theta);
 	}
 	double cost(){
-		return (0.5/m)*_v.sum(_v.pow(_v.diff(hypothesis(),y),2));
+		return (0.5/m)*Vector::sum(Vector::pow(Vector::diff(hypothesis(),y),2));
 	}
 	double cost(double lambda){
 		double reg = 0;
@@ -45,38 +44,38 @@ private:
 			reg += theta[i]*theta[i];
 		}
 		reg *= lambda;
-		return (0.5/m)*(_v.sum(_v.pow(_v.diff(hypothesis(),y),2)) + reg);
+		return (0.5/m)*(Vector::sum(Vector::pow(Vector::diff(hypothesis(),y),2)) + reg);
 	}
 public:
 	LinearRegression(const vector <vector <double> > &data, const vector <double> &label, bool normalize = false){
 		if(data.size()==0) throw "Data must not be empty";
 		if(data.size()!=label.size())	throw "Number of X and y must match\n";
-		if(!_m.isMatrix(data))	throw "X must be a matrix (i.e double dimensional vector)\n";
+		if(!Matrix::isMatrix(data))	throw "X must be a matrix (i.e double dimensional vector)\n";
 		m = data.size();
 		n = data[0].size();
 		if(normalize){
-			avg = _m.avg(data);
-			std = _m.std(data);
-			X = _m.normalize(data);
+			avg = Matrix::avg(data);
+			std = Matrix::std(data);
+			X = Matrix::normalize(data);
 			isNormalized = true;
 		}
 		else{
 			X = data;
 			isNormalized = false;
 		}
-		_d.prependColumn(X,_v.ones(m));
-		X_t = _m.transpose(X);
+		_d.prependColumn(X,Vector::ones(m));
+		X_t = Matrix::transpose(X);
 		y = label;
-		theta = _v.random(n+1, true);
+		theta = Vector::random(n+1, true);
 	}
 	double trainByGradientDescent(double alpha, bool printCost = false){
 		if(!isNormalized){
 			printf("Gradient Descent without Normalization may take a long time to complete. Try to normalize the features for faster descent.\n");
 		}
-		theta = _v.random(n+1, true);
+		theta = Vector::random(n+1, true);
 		double prev_cost = cost(), curr_cost;
 		while(true){
-			theta = _v.diff(theta, _v.prod(_m.multiply(X_t,_v.diff(hypothesis(),y)),alpha/m));
+			theta = Vector::diff(theta, Vector::prod(Matrix::multiply(X_t,Vector::diff(hypothesis(),y)),alpha/m));
 			curr_cost = cost();
 			if(curr_cost-prev_cost>0 || fabs(curr_cost-prev_cost)<0.000001){
 				if(curr_cost-prev_cost > 0.000001){
@@ -94,11 +93,11 @@ public:
 		if(!isNormalized){
 			printf("Gradient Descent without Normalization may take a long time to complete. Try to normalize the features for faster descent.\n");
 		}
-		theta = _v.random(n+1, true);
+		theta = Vector::random(n+1, true);
 		double prev_cost = cost(lambda), curr_cost;
 		double reg = 1 - (alpha*lambda)/m;
 		while(true){
-			theta = _v.diff(_v.prod(theta,reg), _v.prod(_m.multiply(X_t,_v.diff(hypothesis(),y)),alpha/m));
+			theta = Vector::diff(Vector::prod(theta,reg), Vector::prod(Matrix::multiply(X_t,Vector::diff(hypothesis(),y)),alpha/m));
 			curr_cost = cost();
 			if(curr_cost-prev_cost>0 || fabs(curr_cost-prev_cost)<0.000001){
 				if(curr_cost-prev_cost > 0.000001){
@@ -115,28 +114,28 @@ public:
 	void trainByNormalEquation(){
 		try{
 			// Calculate inv(X'X)*X'*y. It can be mathematically proved that multiplying X' and y first has asymptotically less complexity (O(mn+n^2)). 
-			theta = _m.multiply(_m.inverse(_m.multiply(X_t,X)),_m.multiply(X_t,y));
+			theta = Matrix::multiply(Matrix::inverse(Matrix::multiply(X_t,X)),Matrix::multiply(X_t,y));
 		}
 		catch(const char *s){
 			//May throw inverse doesn't exists exception.
 			//Use regularization as for any lambda > 1, the matrix will be invertible.
-			theta = _m.multiply(_m.pinverse(_m.multiply(X_t,X)),_m.multiply(X_t,y));
+			theta = Matrix::multiply(Matrix::pinverse(Matrix::multiply(X_t,X)),Matrix::multiply(X_t,y));
 		}
 	}
 
 	void trainByRegularizedNormalEquation(double lambda){
 		//Calculate inv(X'X  + lambda*(0 0....))*X'*y
-		vector <vector <double> > mat = _m.multiply(X_t,X); //(n+1)x(n+1)
+		vector <vector <double> > mat = Matrix::multiply(X_t,X); //(n+1)x(n+1)
 		for(int i=1;i<mat.size();i++){
 			mat[i][i] += lambda;
 		}
-		theta = _m.multiply(_m.inverse(mat),_m.multiply(X_t,y));
+		theta = Matrix::multiply(Matrix::inverse(mat),Matrix::multiply(X_t,y));
 		//printf("Cost: %lf %lf %lf\n",theta[0], theta[1], cost());
 	}
 	void trainByRegularizedNormalEquation(){
 		//Automatically decide the best lambda. Split training and cross-validation set
 
-		vector <int> rand = _v.random_permutation(m);
+		vector <int> rand = Vector::random_permutation(m);
 
 		vector <vector<double> > X_train;
 		vector <vector<double> > X_val;
@@ -153,8 +152,8 @@ public:
 			y_val.push_back(y[rand[i]-1]);
 		}
 
-		vector <vector<double> > X_train_t = _m.transpose(X_train);
-		vector <vector<double> > X_t_X = _m.multiply(X_train_t,X_train);
+		vector <vector<double> > X_train_t = Matrix::transpose(X_train);
+		vector <vector<double> > X_t_X = Matrix::multiply(X_train_t,X_train);
 
 		//Calculate inv(X'X  + lambda*(0 0....))*X'*y
 		double low = 0;
@@ -166,20 +165,20 @@ public:
 			for(int i=1;i<X_t_X.size();i++){
 				X_t_X[i][i] += lambda1;
 			}
-			theta = _m.multiply(_m.inverse(X_t_X),_m.multiply(X_train_t,y_train));
+			theta = Matrix::multiply(Matrix::inverse(X_t_X),Matrix::multiply(X_train_t,y_train));
 			for(int i=1;i<X_t_X.size();i++){
 				X_t_X[i][i] -= lambda1;
 			}
-			val_error_1 = (0.5/m_val)*_v.sum(_v.pow(_v.diff(_m.multiply(X_val,theta),y_val),2));
+			val_error_1 = (0.5/m_val)*Vector::sum(Vector::pow(Vector::diff(Matrix::multiply(X_val,theta),y_val),2));
 
 			for(int i=1;i<X_t_X.size();i++){
 				X_t_X[i][i] += lambda2;
 			}
-			theta = _m.multiply(_m.inverse(X_t_X),_m.multiply(X_train_t,y_train));
+			theta = Matrix::multiply(Matrix::inverse(X_t_X),Matrix::multiply(X_train_t,y_train));
 			for(int i=1;i<X_t_X.size();i++){
 				X_t_X[i][i] -= lambda2;
 			}
-			val_error_2 = (0.5/m_val)*_v.sum(_v.pow(_v.diff(_m.multiply(X_val,theta),y_val),2));
+			val_error_2 = (0.5/m_val)*Vector::sum(Vector::pow(Vector::diff(Matrix::multiply(X_val,theta),y_val),2));
 
 			//printf("Cost: %lf %lf %lf %lf\n",lambda1, lambda2, val_error_1, val_error_2);
 
@@ -205,7 +204,7 @@ public:
 				}
 			}
 		}
-		_d.prependColumn(X_p,_v.ones(X_p.size()));
-		return _m.multiply(X_p,theta);
+		_d.prependColumn(X_p,Vector::ones(X_p.size()));
+		return Matrix::multiply(X_p,theta);
 	}
 };

@@ -13,6 +13,10 @@
 	#define _VECTOR_
 #endif
 
+#ifndef _STRING_
+	#include <string>
+	#define _STRING_
+#endif
 
 using namespace std;
 

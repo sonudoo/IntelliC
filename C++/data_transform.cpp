@@ -4,6 +4,17 @@
 	#define _VECTOR_
 #endif
 
+#ifndef _STRING_
+	#include <string>
+	#define _STRING_
+#endif
+
+#ifndef _DATA_TRANSFORM_CPP_
+
+#define _DATA_TRANSFORM_CPP_
+
+using namespace std;
+
 template <class T>
 class DataTransform{
 private:
@@ -194,3 +205,5 @@ vector <vector<double> > DataTransform<string>::parseDouble(const vector <vector
 	}
 	return res;
 }
+
+#endif

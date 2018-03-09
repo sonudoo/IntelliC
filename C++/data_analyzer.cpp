@@ -33,6 +33,12 @@
 	#define _IOSTREAM_
 #endif
 
+#ifndef _STRING_
+	#include <string>
+	#define _STRING_
+#endif
+
+
 using namespace std;
 
 template <typename T>

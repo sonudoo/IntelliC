@@ -1,14 +1,15 @@
-#include <iostream>
 #include "csv_handler.cpp"
 #include "data_analyzer.cpp"
+#include "data_transform.cpp"
 #include "LinearRegression.cpp"
+#include "vector.cpp"
+#include "matrix.cpp"
 using namespace std;
 int main(){
 	CSVHandler c("housing_prices.csv");
 	vector <vector <double> > data;
 	vector <string> label;
 	c.readCSV(data, label);
-	DataTransform <double> dt;
 	vector <vector <double> > X_train;
 	vector <double> y_train;
 	vector <vector <double> > X_val;
@@ -17,6 +18,7 @@ int main(){
 		X_train.push_back(data[i]);
 		y_train.push_back(data[i][4]);
 	}
+	DataTransform <double> dt;
 	X_val.push_back(data[3]);
 	y_val.push_back(data[3][4]);
 	X_train = dt.sliceColumn(X_train,0,4);
