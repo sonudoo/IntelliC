@@ -38,6 +38,9 @@ using namespace std;
 
 class Vector{
 private:
+	static double sigmoid(double z){
+		return 1/(1+exp(-z));
+	}
 	static double randDouble(bool positiveOnly = false){
 		if(rand()%2==0 || positiveOnly)
 			return (double)rand()/(double)RAND_MAX;
@@ -106,6 +109,18 @@ public:
 		for(int i=0;i<data.size();i++)
 			s = min(data[i],s);
 		return s;
+	}
+	static vector <double> log(const vector <double> &data){
+		vector <double> res;
+		for(int i=0;i<data.size();i++)
+			res.push_back(std::log(data[i]));
+		return res;
+	}
+	static vector <double> sigmoid(const vector <double> &data){
+		vector <double> res;
+		for(int i=0;i<data.size();i++)
+			res.push_back(sigmoid(data[i]));
+		return res;
 	}
 	static vector <double> normalize(const vector <double> &data){
 		if(data.size()==0)	return data;

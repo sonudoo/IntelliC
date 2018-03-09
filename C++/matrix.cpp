@@ -57,6 +57,9 @@ private:
 		if(x<y)	return x;
 		return y;
 	}
+	static double sigmoid(double z){
+		return 1/(1+exp(-z));
+	}
 public:
 	static bool isMatrix(const vector <vector <double> > &data){
 		if(data.size()==0)	return true;
@@ -217,6 +220,40 @@ public:
 				ss += data[j][i]*data[j][i];
 			}
 			res.push_back(sqrt((ss/m) - ((s*s)/(m*m))));
+		}
+		return res;
+	}
+	static vector <vector<double> > log(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <vector <double> > res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<m;i++){
+			vector <double> row;
+			for(int j=0;j<n;j++){
+				row.push_back(std::log(data[i][j]));
+			}
+			res.push_back(row);
+		}
+		return res;
+	}
+	static vector <vector<double> > sigmoid(const vector <vector <double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		vector <vector <double> > res;
+		if(data.size()==0)	return res;
+		int n = data[0].size();
+		int m = data.size();
+		for(int i=0;i<m;i++){
+			vector <double> row;
+			for(int j=0;j<n;j++){
+				row.push_back(sigmoid(data[i][j]));
+			}
+			res.push_back(row);
 		}
 		return res;
 	}
