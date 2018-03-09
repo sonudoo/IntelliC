@@ -9,9 +9,9 @@
 	#define _TIME_H_
 #endif
 
-#ifndef _LIMITS_H_
-	#include <limits.h>
-	#define _LIMITS_H_
+#ifndef _LIMITS_
+	#include <limits>
+	#define _LIMITS_
 #endif
 
 #ifndef _MATH_H_
@@ -19,6 +19,11 @@
 	#define _MATH_H_
 #endif
 
+
+#ifndef _STDLIB_H_
+	#include <stdlib.h>
+	#define _STDLIB_H_
+#endif
 
 class Matrix{
 private:
@@ -531,5 +536,128 @@ public:
 			}
 		}
 		return res;
+	}
+	bool isSymmetric(const vector <vector<double> > &data){
+		if(!isMatrix(data)){
+			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
+		}
+		if(data.size()==0)	return true;
+		int m = data.size();
+		int n = data[0].size();
+		if(m!=n)	return false;
+		for(int i=0;i<n;i++){
+			for(int j=i+1;j<n;j++){
+				if(data[i][j]!=data[j][i]){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	void eig(vector <vector<double> > data, vector <vector <double> > &eigen_vectors, vector <double> &eigen_values){
+		if(data.size()==0)	return;
+		if(!isSymmetric(data))
+			throw "Eigens of only symmetric matrices can be calculated using this function.\n";
+		int n = data.size();
+		/*for(int i=0;i<n;i++){
+			for(int j=0;j<n;j++){
+				printf("%lf ",data[i][j]);
+			}
+			printf("\n");
+		}
+		printf("\n");*/
+		for(int loop=0;loop<n;loop++){
+			double c[n];
+			vector <double> x(n);
+			for(int i=0;i<n;i++){
+				x[i] = 1;
+			}
+			double y,k=0;
+			do{
+		    	y=k;
+		    	k = 0;          
+		    	for(int i=0;i<n;i++){   
+		    		c[i]=0;
+		    		for (int j=0;j<n;j++){
+		                c[i]+=data[i][j]*x[j];
+		            }
+		            k += c[i]*c[i];
+				}
+				k = sqrt(k);
+		        for(int i=0;i<n;i++)
+		            x[i]=c[i]/k;
+		    }while (fabs(k-y)>0.000001);
+		    /*printf("\nA*X gives\n");
+		    for(int i=0;i<n;i++){   
+		        c[i]=0;
+		        for(int j=0;j<n;j++){
+		            c[i]+=data[i][j]*x[j];
+		        }
+		        printf("%lf\n",c[i]);
+		    }
+		    printf("\n");
+		    printf("\nx gives\n");
+		    for(int i=0;i<n;i++){   
+		        printf("%lf\n",x[i]);
+		    }
+		    printf("\n");*/
+		    //Determine the sign of k first
+		    if((x[0]<0 && c[0]>0) || (x[0]>0 && c[0]<0)){
+		    	k = -k;
+		    }
+		    //Determine the sign of vectors by using the fact that all eigen-vectors are Orthogonal for square matrices.
+
+		    
+
+		    eigen_values.push_back(k);
+		    eigen_vectors.push_back(x);
+			double v[n][n];
+		    for(int i=0;i<n;i++){
+		    	for(int j=0;j<n;j++){
+		    		v[i][j] = x[i]*x[j];
+		    	}
+		    }
+		    for(int i=0;i<n;i++){
+		    	for(int j=0;j<n;j++){
+		    		data[i][j] = data[i][j] - k*v[i][j];
+		    	}
+		    }
+		}
+	}
+	void svd(const vector <vector<double> > &data, vector <vector <double> > &U, vector <vector<double> > &E, vector <vector <double> > &V_t){
+		if(data.size()==0)	return;
+		if(!isSymmetric(data))
+			throw "SVD of only symmetric matrices can be calculated using this function.\n";
+		int m = data.size();
+		int n = data[0].size();
+		vector <vector <double> > A_t_A = multiply(transpose(data),data);
+		vector <vector <double> > A_A_t = multiply(data,transpose(data));
+		vector <double> e_val_1,e_val_2;
+		eig(A_t_A, V_t, e_val_1);
+		eig(A_A_t, U, e_val_2);
+		U = transpose(U);
+		V_t = transpose(V_t);
+		E = zeros(m,n);
+		for(int i=0;i<min(m,n);i++){
+			E[i][i] = sqrt(e_val_1[i]);
+		}
+	}
+	vector <vector <double> > pinverse(const vector <vector<double> > &data){
+		if(data.size()==0)		return data;
+		if(!isSymmetric(data))
+			throw "Pseudo inverse of only symmetric matrices can be calculated using this function.\n";
+		int m = data.size();
+		int n = data[0].size();
+		if(m!=n){
+			throw "Only square matrices are invertible\n";
+		}
+		vector <vector<double> > U,E,V_t;
+		svd(data, U, E, V_t);
+		for(int i=0;i<n;i++){
+			if(fabs(E[i][i])>0.000001){
+				E[i][i] = 1/E[i][i];
+			}
+		}
+		return multiply(V_t,multiply(transpose(E),transpose(U)));
 	}
 };

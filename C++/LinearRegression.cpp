@@ -120,7 +120,7 @@ public:
 		catch(const char *s){
 			//May throw inverse doesn't exists exception.
 			//Use regularization as for any lambda > 1, the matrix will be invertible.
-			trainByRegularizedNormalEquation(1);
+			theta = _m.multiply(_m.pinverse(_m.multiply(X_t,X)),_m.multiply(X_t,y));
 		}
 	}
 
