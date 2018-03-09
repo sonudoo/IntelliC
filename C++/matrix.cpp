@@ -257,25 +257,34 @@ public:
 		}
 		return res;
 	}
-	static vector <vector <double> > normalize(const vector <vector <double> > &data){
+	static vector <vector <double> > normalize(const vector <vector <double> > data){
 		if(!isMatrix(data)){
 			throw "All the rows must have same number of columns in a Matrix. Check the matrix (i.e double dimension vector) for dimensional consistency\n";
 		}
 		if(data.size()==0)	return data;
-		vector <double> sd = std(data);
-		vector <double> ag = avg(data);
-		vector <vector <double> > res;
+
+		vector <vector<double> > res;
 		int n = data[0].size();
 		int m = data.size();
+		vector <double> ag = avg(data);
+
 		for(int i=0;i<m;i++){
 			vector <double> row;
+			for(int j=0;j<n;j++){
+				row.push_back(data[i][j]-ag[j]);
+			}
+			res.push_back(row);
+		}
+
+		vector <double> sd = std(res);
+		
+		for(int i=0;i<m;i++){
 			for(int j=0;j<n;j++){
 				if(sd[j]==0){
 					throw "Normalization failed as all the rows in a column is same.\n";
 				}
-				row.push_back((data[i][j]-ag[j])/(sd[j]));
+				res[i][j] = res[i][j]/sd[j];
 			}
-			res.push_back(row);
 		}
 		return res;
 	}
