@@ -14,6 +14,11 @@
 	#define _STDIO_H_
 #endif
 
+#ifndef _UTILITY_
+	#include <utility>
+	#define _UTILITY_
+#endif
+
 
 #include "vector.cpp"
 #include "matrix.cpp"
@@ -121,7 +126,7 @@ public:
 		return prev_cost;
 	}
 
-	vector <double> predict(vector <vector<double> > X_p){ //Pass a copy since we will modify it.
+	vector <pair<double, double> > predict(vector <vector<double> > X_p){ //Pass a copy since we will modify it.
 		// The matrix is automatically verified by rest of the functions.
 		if(isNormalized){
 			// Renormalize using the same mean and standard deviation.
@@ -133,13 +138,16 @@ public:
 			}
 		}
 		_d.prependColumn(X_p,Vector::ones(X_p.size()));
-		vector <double> res = Vector::sigmoid(Matrix::multiply(X_p,theta));
-		for(int i=0;i<res.size();i++){
-			if(res[i]>=0.5){
-				res[i] = 1; 
+		vector <double> v = Vector::sigmoid(Matrix::multiply(X_p,theta));
+		vector <pair<double, double> > res(v.size()); 
+		for(int i=0;i<v.size();i++){
+			if(v[i]>=0.5){
+				res[i].first = 1; 
+				res[i].second = v[i]; //The confidence
 			}
 			else{
-				res[i] = 0;
+				res[i].first = 0;
+				res[i].second = 1-v[i];
 			}
 		}
 		return res;
