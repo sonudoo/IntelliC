@@ -20,9 +20,9 @@
 #endif
 
 
-#include "vector.cpp"
-#include "matrix.cpp"
-#include "data_transform.cpp"
+#include "Vector.cpp"
+#include "Matrix.cpp"
+#include "DataTransform.cpp"
 
 
 class LogisticRegression{

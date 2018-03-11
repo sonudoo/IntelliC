@@ -58,7 +58,7 @@ private:
 		return y;
 	}
 	static double sigmoid(double z){
-		return 1/(1+exp(-z));
+		return 1.00/(1.00+exp(-z));
 	}
 public:
 	static bool isMatrix(const vector <vector <double> > &data){
@@ -101,7 +101,7 @@ public:
 		for(int i=0;i<n;i++){
 			vector <double> row;
 			for(int j=0;j<m;j++){
-				row.push_back(1);
+				row.push_back(1.00);
 			}
 			res.push_back(row);
 		}

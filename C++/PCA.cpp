@@ -3,8 +3,8 @@
 	#define _VECTOR_
 #endif
 
-#include "matrix.cpp"
-#include "data_transform.cpp"
+#include "Matrix.cpp"
+#include "DataTransform.cpp"
 
 class PCA{
 private:
