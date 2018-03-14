@@ -10,8 +10,6 @@ class PCA{
 private:
 	vector <vector <double> > X;
 	vector <vector <double> > X_t;
-	vector <double> avg;
-	vector <double> std;
 	vector <vector <double> > U;
 	vector <vector <double> > E;
 	vector <vector <double> > V_t;
@@ -25,8 +23,6 @@ public:
 		m = data.size();
 		n = data[0].size();
 		X = Matrix::normalize(data);
-		avg = Matrix::avg(data);
-		std = Matrix::std(data);
 		X_t = Matrix::transpose(X);
 		Matrix::svd(Matrix::prod(Matrix::multiply(X_t,X),1.0/m), U, E, V_t);
 	}
