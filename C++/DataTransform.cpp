@@ -1,13 +1,5 @@
-
-#ifndef _VECTOR_
-	#include <vector>
-	#define _VECTOR_
-#endif
-
-#ifndef _STRING_
-	#include <string>
-	#define _STRING_
-#endif
+#include <vector>
+#include <string>
 
 #ifndef _DATA_TRANSFORM_CPP_
 

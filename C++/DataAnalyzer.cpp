@@ -1,43 +1,15 @@
-#ifndef _MATH_H_
-	#include <math.h>
-	#define _MATH_H_
-#endif
+#include <math.h>	
+#include <vector>
+#include <stio.h>
+#include <algorithm>
+#include <limits.h>
+#include <set>
+#include <iostream>
+#include <string>
 
-#ifndef _VECTOR_
-	#include <vector>
-	#define _VECTOR_
-#endif
+#ifndef _DATA_ANALYZER_CPP_
 
-#ifndef _STDIO_H_
-	#include <stdio.h>
-	#define _STDIO_H_
-#endif
-
-#ifndef _ALGORITHM_
-	#include <algorithm>
-	#define _ALGORITHM_
-#endif
-
-#ifndef _LIMITS_H_
-	#include <limits.h>
-	#define _LIMIT_H_
-#endif
-
-#ifndef _SET_
-	#include <set>
-	#define _SET_
-#endif
-
-#ifndef _IOSTREAM_
-	#include <iostream>
-	#define _IOSTREAM_
-#endif
-
-#ifndef _STRING_
-	#include <string>
-	#define _STRING_
-#endif
-
+#define _DATA_ANALYZER_CPP_
 
 using namespace std;
 
@@ -440,3 +412,5 @@ public:
 		}
 	}
 };
+
+#endif

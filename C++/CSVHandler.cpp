@@ -1,22 +1,11 @@
-#ifndef _STDIO_H_
-	#include <stdio.h>
-	#define _STDIO_H_
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
+#include <string>
 
-#ifndef _STDLIB_H_
-	#include <stdlib.h>
-	#define _STDLIB_H_
-#endif
+#ifndef _CSV_HANDLER_CPP_
 
-#ifndef _VECTOR_
-	#include <vector>
-	#define _VECTOR_
-#endif
-
-#ifndef _STRING_
-	#include <string>
-	#define _STRING_
-#endif
+#define _CSV_HANDLER_CPP_
 
 using namespace std;
 
@@ -360,3 +349,4 @@ public:
 	}
 };
 
+#endif

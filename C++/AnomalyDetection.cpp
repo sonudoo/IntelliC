@@ -1,8 +1,4 @@
-#ifndef _VECTOR_
-	#include <vector>
-	#define _VECTOR_
-#endif
-
+#include <vector>
 #include "Matrix.cpp"
 #include "DataTransform.cpp"
 

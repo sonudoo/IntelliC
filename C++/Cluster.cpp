@@ -1,13 +1,5 @@
-#ifndef _VECTOR_
-	#include <vector>
-	#define _VECTOR_
-#endif
-
-#ifndef _LIMITS_
-	#include <limits>
-	#define _LIMITS_
-#endif
-
+#include <vector>
+#include <limits>
 #include "Matrix.cpp"
 #include "Vector.cpp"
 #include "DataTransform.cpp"

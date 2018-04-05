@@ -1,25 +1,7 @@
-
-#ifndef _VECTOR_
-	#include <vector>
-	#define _VECTOR_
-#endif
-
-#ifndef _TIME_H_
-	#include <time.h>
-	#define _TIME_H_
-#endif
-
-#ifndef _STDIO_H_
-	#include <stdio.h>
-	#define _STDIO_H_
-#endif
-
-#ifndef _UTILITY_
-	#include <utility>
-	#define _UTILITY_
-#endif
-
-
+#include <vector>
+#include <time.h>
+#include <stdio.h>
+#include <utility>
 #include "Vector.cpp"
 #include "Matrix.cpp"
 #include "DataTransform.cpp"
