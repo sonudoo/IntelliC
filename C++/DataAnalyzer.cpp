@@ -1,6 +1,6 @@
 #include <math.h>	
 #include <vector>
-#include <stio.h>
+#include <stdio.h>
 #include <algorithm>
 #include <limits.h>
 #include <set>
