@@ -206,6 +206,7 @@ This is the library for Linear Regression model. It supports Gradient Descent wi
 ```
 	model.predict(vector <vector <double> > X_p); // Returns a Vector containing prediction of y_p for each record in X_p.
 ```
+
 ## Logistic Regression
 
 This is the library for Logistic Regression model. It supports Gradient Descent with/without Regularization. 
@@ -365,5 +366,32 @@ This is the library for Principal Component Analysis. The library automatically 
 	model.retainedVariance(int k); // Returns the variance that is retained when the Matrix is reduced to K features.
 ```
 
+## Decision Tree Classifier
+
+This is the library for Decision Tree Classifier model. It uses both GINI index and Cross Entropy for cost calculation.
+
+#### Dependency: Vector.cpp, Matrix.cpp and DataTransform.cpp
+#### Usage: 
+
+* First include the file.
+
+```
+	#include "DecisionTreeClassifier.cpp"
+```
+
+* Create an object of Class DecisionTreeClassifier.
+```
+	DecisionTreeClassifier model(vector <vector <double> > X, vector <double> y); // X is the feature Matrix where each column is a feature. y is a Vector of predictions.
+```
+
+* Train the model.
+```
+	model.train(int cost_index, int max_depth, int min_size); // Trains the model. The first parameter specifies the cost index to be used - 1 for GINI index and 2 for Cross Entropy. The second parameter is the maximum depth of the tree (typically 10). The third parameter is the minimum size of the node under which split is possible (typically 5).
+```
+
+* Finally predict.
+```
+	model.predict(vector <vector <double> > X_p); // Returns a Vector containing prediction of y_p for each record in X_p.
+```
 
 

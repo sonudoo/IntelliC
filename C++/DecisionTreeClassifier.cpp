@@ -32,6 +32,7 @@ private:
 	int m;
 	int max_depth;
 	int min_size;
+	int cost_index;
 	vector <double> classes;
 	node *start;
 	double gini(const vector <vector<int> > &groups){
@@ -58,8 +59,45 @@ private:
 		}
 		return ret;
 	}
+	double entropy(const vector <int> &group){
+		double n = group.size();
+		map <double, int> mp;
+		for(int i=0;i<group.size();i++){
+			if(mp.count(y[group[i]])!=0)
+				mp[y[group[i]]] += 1;
+			else
+				mp[y[group[i]]] = 1;
+		}
+		double ret = 0;
+		map <double, int>::iterator it;
+		for(it=mp.begin();it!=mp.end();it++){
+			double fraction = (it->second)/n;
+			ret += (-fraction*log(fraction));
+		}
+		return ret;
+	}
+	double information_gain(const vector <vector <int> > &groups){
+		vector <int> combined_group;
+		double n = 0;
+		for(int i=0;i<groups.size();i++){
+			for(int j=0;j<groups[i].size();j++){
+				combined_group.push_back(groups[i][j]);
+			}
+			n += groups[i].size();
+		}
+		double previous_entropy = entropy(combined_group);
+		double new_entropy = 0;
+		for(int i=0;i<groups.size();i++){
+			new_entropy += (groups[i].size()/n)*entropy(groups[i]);
+		}
+		return previous_entropy-new_entropy;
+	}
 	void getBestSplit(const vector <int> &curr_group, int &idx, double &val, vector <vector <int> > &bestGroups){
-		double bestScore = std::numeric_limits<double>::max();
+		double bestScore;
+		if(cost_index==1)
+			bestScore = std::numeric_limits<double>::max();
+		else
+			bestScore = -std::numeric_limits<double>::max();
 		idx = -1;
 		val = 0.00;
 		for(int i=0;i<n;i++){
@@ -76,12 +114,23 @@ private:
 				}
 				groups.push_back(group1);
 				groups.push_back(group2);
-				double g = gini(groups);
-				if(g < bestScore){
-					bestScore = g;
-					idx = i;
-					val = X[curr_group[j]][i];
-					bestGroups = groups;
+				if(cost_index==1){
+					double g = gini(groups);
+					if(g < bestScore){
+						bestScore = g;
+						idx = i;
+						val = X[curr_group[j]][i];
+						bestGroups = groups;
+					}
+				}
+				else{
+					double ig = information_gain(groups);
+					if(ig > bestScore){
+						bestScore = ig;
+						idx = i;
+						val = X[curr_group[j]][i];
+						bestGroups = groups;
+					}
 				}
 
 			}
@@ -154,15 +203,19 @@ public:
 			classes.push_back(*it);
 		}
 	}
-	void train(int size, int depth){
+	void train(int cost, int depth, int size){
 		if(size < 1){
 			throw "Minimum size must be at least 1.\n";
 		}
 		if(depth < 1){
 			throw "Depth must be at least 1.\n";
 		}
+		if(cost!=1 && cost!=2){
+			throw "Cost Index must be 1 or 2.\n";
+		}
 		min_size = size;
 		max_depth = depth;
+		cost_index = cost;
 		node *curr = new node();
 		for(int i=0;i<m;i++){
 			(curr->group).push_back(i);
