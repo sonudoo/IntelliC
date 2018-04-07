@@ -394,4 +394,27 @@ This is the library for Decision Tree Classifier model. It uses both GINI index 
 	model.predict(vector <vector <double> > X_p); // Returns a Vector containing prediction of y_p for each record in X_p.
 ```
 
+## K Nearest Neighbour Classifier
+
+This is the library for KNN Classifier model. It uses Euclidean distance.
+
+#### Dependency: Vector.cpp, Matrix.cpp and DataTransform.cpp
+#### Usage: 
+
+* First include the file.
+
+```
+	#include "KNN.cpp"
+```
+
+* Create an object of Class KNN.
+```
+	KNN model(vector <vector <double> > X, vector <double> y); // X is the feature Matrix where each column is a feature. y is a Vector of predictions.
+```
+
+* Predict.
+```
+	model.predict(vector <vector <double> > X_p, int k); // Returns a Vector containing prediction of y_p for each record in X_p. 'k' is the number of neighbours that needs to be considered.
+```
+
 
