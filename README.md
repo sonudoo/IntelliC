@@ -1,6 +1,6 @@
-InteslliC is a Machine Learning library written in C++. It is easy to use and doesn't have any dependencies.
+IntelliC is a Machine Learning library written in C++. It is easy to use and doesn't have any dependencies.
 
-##### Remember: Matrix is nothing but double dimensional Vector.
+##### Important: Matrix is represented as a double dimensional Vector.
 
 ## Kaggle Data Downloader
 
